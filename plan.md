@@ -12,8 +12,8 @@
 | **M2** | 核心类型定义 + Pinia Stores | ✅ |
 | **M3** | LangGraph 引擎核心 - 状态 + ActionProvider | ✅ |
 | **M4** | LangGraph 图定义 - 所有节点 + 子图 | ✅ |
-| **M5** | 首页 UI（模型配置 + 角色介绍 + 开始游戏） | ⬜ |
-| **M6** | 游戏主界面 UI | ⬜ |
+| **M5** | 首页 UI（模型配置 + 角色介绍 + 开始游戏） | ✅ |
+| **M6** | 游戏主界面 UI | 🔄 |
 | **M7** | Composables + 流式输出 + 整体联调 | ⬜ |
 | **M8** | Prompt 填充 + 测试 + 体验优化 | ⬜ |
 
@@ -75,14 +75,15 @@
 - ✅ app/engine/graph/vote.graph.ts（投票子图：串行投票→统计）
 - ✅ app/engine/graph/game.graph.ts（主循环控制器 + 猎人触发 + 胜负判定）
 
-## M5：首页 UI（模型配置 + 角色介绍 + 开始游戏）
+## M5：首页 UI（模型配置 + 角色介绍 + 开始游戏）✅
 
-- ⬜ shadcn-vue 组件初始化（Button / Card / Input / Select / Dialog / Badge 等）
-- ⬜ app/pages/index.vue（首页布局）
-- ⬜ 模型配置区（提供商选择 / API Key 输入 / 模型选择）
-- ⬜ 角色介绍卡片
-- ⬜ 玩家角色选择（随机 / 指定）
-- ⬜ 开始游戏按钮 → 跳转 /game
+- ✅ shadcn-vue 组件初始化（Button / Card / Input / Label / Select / Badge / Separator）
+- ✅ CSS 主题变量（暗色主题 + 自定义狼人/好人/昼夜色系）
+- ✅ app/pages/index.vue（完整首页）
+- ✅ 模型配置区（6 家提供商下拉 / API Key 密码框 / 模型选择 / Base URL 可编辑）
+- ✅ 角色介绍卡片（5 角色 + 阵营徽章）
+- ✅ 玩家角色选择（随机 / 5 种指定角色）
+- ✅ 开始游戏按钮（配置校验 → 跳转 /game）
 
 ## M6：游戏主界面 UI
 

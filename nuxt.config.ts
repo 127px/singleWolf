@@ -10,7 +10,13 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@nuxt/icon',
     '@vueuse/motion/nuxt',
+    'shadcn-nuxt',
   ],
+
+  shadcn: {
+    prefix: '',
+    componentDir: './app/components/ui',
+  },
 
   css: ['~/assets/css/main.css'],
 
