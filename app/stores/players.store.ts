@@ -1,7 +1,8 @@
 import type { Faction, RoleType } from '~/types/game.types'
 import type { Player } from '~/types/player.types'
 
-const PLAYER_NAMES = ['1号玩家', '2号玩家', '3号玩家', '4号玩家', '5号玩家', '6号玩家', '7号玩家', '8号玩家', '9号玩家', '10号玩家']
+const TOTAL_PLAYERS = 10
+const HUMAN_SEAT = TOTAL_PLAYERS // 固定是 player_10
 
 const ROLE_POOL: RoleType[] = [
   'werewolf',
@@ -39,37 +40,46 @@ export const usePlayersStore = defineStore('players', () => {
     return role === 'werewolf' ? 'werewolf' : 'villager'
   }
 
-  function initPlayers(humanRole?: RoleType): void {
-    const roles = [...ROLE_POOL]
-
-    // Fisher-Yates 洗牌
-    for (let i = roles.length - 1; i > 0; i--) {
+  function shuffle<T>(arr: T[]): T[] {
+    const result = [...arr]
+    for (let i = result.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1))
-      ;[roles[i], roles[j]] = [roles[j]!, roles[i]!]
+      ;[result[i], result[j]] = [result[j]!, result[i]!]
     }
+    return result
+  }
 
-    // 若指定了玩家角色，将其交换到位置 0
+  function initPlayers(humanRole?: RoleType): void {
+    // 随机打散角色列表
+    const roles = shuffle([...ROLE_POOL])
+
+    // 保证 player_10（最后一位）拿到指定角色；若未指定则保持随机
+    const humanIdx = HUMAN_SEAT - 1 // 数组下标（0-based）
     if (humanRole) {
-      const idx = roles.indexOf(humanRole)
-      if (idx > 0) {
-        ;[roles[0], roles[idx]] = [roles[idx]!, roles[0]!]
+      const roleIdx = roles.indexOf(humanRole)
+      if (roleIdx !== humanIdx) {
+        ;[roles[humanIdx], roles[roleIdx]] = [roles[roleIdx]!, roles[humanIdx]!]
       }
     }
 
-    players.value = roles.map((role, index) => ({
-      id: `player_${index}`,
-      name: PLAYER_NAMES[index]!,
-      seatIndex: index,
-      role,
-      faction: getFactionForRole(role),
-      isAlive: true,
-      isHuman: index === 0,
-      systemPrompt: '',
-      memory: {
-        ...(role === 'seer' ? { seerResults: [] } : {}),
-        ...(role === 'witch' ? { witchPotions: { antidote: true, poison: true } } : {}),
-      },
-    }))
+    // player 位置固定（1-indexed），角色按顺序分配
+    players.value = roles.map((role, i) => {
+      const seat = i + 1 // 1 ~ TOTAL_PLAYERS
+      return {
+        id: `player_${seat}`,
+        name: `player_${seat}`,
+        seatIndex: seat,
+        role,
+        faction: getFactionForRole(role),
+        isAlive: true,
+        isHuman: seat === HUMAN_SEAT,
+        systemPrompt: '',
+        memory: {
+          ...(role === 'seer' ? { seerResults: [] } : {}),
+          ...(role === 'witch' ? { witchPotions: { antidote: true, poison: true } } : {}),
+        },
+      }
+    })
   }
 
   function killPlayer(id: string): void {

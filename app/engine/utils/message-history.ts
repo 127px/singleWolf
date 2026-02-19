@@ -33,8 +33,8 @@ export function buildMessageHistory(
     }
 
     if (player.role === 'seer') {
-      if (round.nightEvents.seerAction?.content) {
-        messages.push(round.nightEvents.seerAction)
+      if (round.nightEvents.seerActions?.length) {
+        messages.push(...round.nightEvents.seerActions)
       }
     }
 

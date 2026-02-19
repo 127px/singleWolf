@@ -1,6 +1,6 @@
 import type { GamePhase } from './game.types'
 
-export type MessageType = 'system' | 'speak' | 'vote' | 'action' | 'summary'
+export type MessageType = 'system' | 'speak' | 'vote' | 'action' | 'summary' | 'reasoning'
 
 export interface ChatMessage {
   id: string

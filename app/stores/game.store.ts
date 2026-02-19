@@ -6,6 +6,7 @@ export const useGameStore = defineStore('game', () => {
   const round = ref(0)
   const winner = ref<Faction | null>(null)
   const isAiThinking = ref(false)
+  const isPlayerDead = ref(false)
 
   const gameLog = ref<GameLog>({ rounds: [] })
 
@@ -25,7 +26,7 @@ export const useGameStore = defineStore('game', () => {
       nightEvents: {
         wolfDiscussion: [],
         killDecision: {} as ChatMessage,
-        seerAction: {} as ChatMessage,
+        seerActions: [],
         witchNotification: {} as ChatMessage,
         witchAction: {} as ChatMessage,
       },
@@ -50,6 +51,7 @@ export const useGameStore = defineStore('game', () => {
     round.value = 0
     winner.value = null
     isAiThinking.value = false
+    isPlayerDead.value = false
     gameLog.value = { rounds: [] }
   }
 
@@ -58,6 +60,7 @@ export const useGameStore = defineStore('game', () => {
     round,
     winner,
     isAiThinking,
+    isPlayerDead,
     gameLog,
     isGameOver,
     isNight,

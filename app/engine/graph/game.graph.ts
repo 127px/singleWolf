@@ -13,6 +13,8 @@ export interface GameLoopCallbacks {
   onHunterTrigger: (hunterId: string) => void
   onVoteResults: (votes: Record<string, string>, eliminatedId: string | null) => void
   onGameEnd: (winner: 'werewolf' | 'villager') => void
+  /** 玩家（真人）死亡时触发，返回 'continue' 继续观战或 'restart' 重开 */
+  onPlayerDeath?: (playerId: string) => Promise<'continue' | 'restart'>
 }
 
 export async function runGameLoop(
@@ -37,6 +39,17 @@ export async function runGameLoop(
     }
     state.alivePlayers = state.players.filter(p => p.isAlive)
     callbacks.onNightDeaths(nightDeaths)
+
+    // 检查玩家（真人）是否夜晚死亡
+    for (const deadId of nightDeaths) {
+      const deadPlayer = state.players.find(p => p.id === deadId)
+      if (deadPlayer?.isHuman && callbacks.onPlayerDeath) {
+        const choice = await callbacks.onPlayerDeath(deadId)
+        if (choice === 'restart') {
+          return state
+        }
+      }
+    }
 
     // 猎人夜间触发（被狼杀但不是被毒杀）
     for (const deadId of nightDeaths) {
@@ -93,11 +106,19 @@ export async function runGameLoop(
       state.alivePlayers = state.players.filter(p => p.isAlive)
       callbacks.onPlayerEliminated(state.eliminatedByVote, 'vote')
 
+      // 检查玩家（真人）是否被投票出局
+      const eliminatedPlayer = state.players.find(p => p.id === state.eliminatedByVote)
+      if (eliminatedPlayer?.isHuman && callbacks.onPlayerDeath) {
+        const choice = await callbacks.onPlayerDeath(state.eliminatedByVote)
+        if (choice === 'restart') {
+          return state
+        }
+      }
+
       // 检查猎人是否被投票出局
-      const eliminated = state.players.find(p => p.id === state.eliminatedByVote)
-      if (eliminated?.role === 'hunter') {
-        callbacks.onHunterTrigger(eliminated.id)
-        const hunterResult = await hunterNode(state, eliminated.id)
+      if (eliminatedPlayer?.role === 'hunter') {
+        callbacks.onHunterTrigger(eliminatedPlayer.id)
+        const hunterResult = await hunterNode(state, eliminatedPlayer.id)
         if (hunterResult.hunterShotTarget) {
           killPlayer(state.players, hunterResult.hunterShotTarget)
           state.alivePlayers = state.players.filter(p => p.isAlive)

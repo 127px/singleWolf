@@ -1,8 +1,10 @@
 <script setup lang="ts">
+// 保留组件供外部复用，GameBoard.vue 中已直接使用 PlayerCard 实现环绕布局
 defineProps<{
   selectable?: boolean
   selectedId?: string | null
   showRoles?: boolean
+  excludeHuman?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -10,12 +12,16 @@ const emit = defineEmits<{
 }>()
 
 const playersStore = usePlayersStore()
+
+const displayPlayers = computed(() =>
+  playersStore.players.filter(p => !p.isHuman),
+)
 </script>
 
 <template>
-  <div class="grid grid-cols-5 gap-2">
+  <div class="flex flex-wrap gap-2 justify-center">
     <PlayerCard
-      v-for="player in playersStore.players"
+      v-for="player in displayPlayers"
       :key="player.id"
       :player="player"
       :selectable="selectable"

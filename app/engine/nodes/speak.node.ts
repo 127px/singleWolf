@@ -7,16 +7,17 @@ export async function speakNode(
   playerId: string,
 ): Promise<Partial<GameGraphState>> {
   const player = state.players.find(p => p.id === playerId)
-
   if (!player || !player.isAlive) {
     return {}
   }
+
+  const gameStore = useGameStore()
 
   const provider = createActionProvider(player)
   const speech = await provider.speak({
     player,
     previousSpeeches: state.speeches,
-    gameLog: { rounds: [] },
+    gameLog: gameStore.gameLog, // 传入真实 gameLog，AI 可看到历史轮次的公共信息
     alivePlayers: state.alivePlayers,
     round: state.round,
     nightDeaths: state.nightDeaths || [],
@@ -32,7 +33,11 @@ export async function speakNode(
     timestamp: Date.now(),
   }
 
-  return {
-    speeches: [message],
+  // 同步写入 gameLog，供后续轮次 buildMessageHistory 使用（排除 reasoning）
+  const currentRound = gameStore.getCurrentRound()
+  if (currentRound) {
+    currentRound.speeches.push(message)
   }
+
+  return { speeches: [message] }
 }

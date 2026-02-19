@@ -111,6 +111,13 @@ export class AIActionProvider implements RoleActionProvider {
       return structured.invoke(messages)
     }, `nightAction:${role}:${this.player.id}`)
 
+    // 将推理过程推送到聊天面板（先推理，后行动结果）
+    const chatStore = useChatStore()
+    const gameStore = useGameStore()
+    if (result.reasoning) {
+      chatStore.addMessage('reasoning', this.player.id, result.reasoning as string, gameStore.phase, gameStore.round)
+    }
+
     return this.mapToNightResult(role, result)
   }
 
@@ -233,6 +240,13 @@ export class AIActionProvider implements RoleActionProvider {
       })
       return structured.invoke(messages)
     }, `hunterShot:${this.player.id}`)
+
+    const chatStore = useChatStore()
+    const gameStore = useGameStore()
+    if (result.reasoning) {
+      chatStore.addMessage('reasoning', this.player.id, result.reasoning, gameStore.phase, gameStore.round)
+    }
+
     return result.targetId
   }
 

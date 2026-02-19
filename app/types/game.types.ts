@@ -22,7 +22,7 @@ export interface RoundLog {
   nightEvents: {
     wolfDiscussion: ChatMessage[]
     killDecision: ChatMessage
-    seerAction: ChatMessage
+    seerActions: ChatMessage[]
     witchNotification: ChatMessage
     witchAction: ChatMessage
   }

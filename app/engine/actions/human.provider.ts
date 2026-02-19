@@ -15,6 +15,7 @@ export type InterruptType
     | 'hunter_shot'
     | 'speech'
     | 'vote'
+    | 'player_death'
 
 export interface InterruptPayload {
   type: InterruptType
@@ -45,6 +46,15 @@ function waitForHumanInput(payload: InterruptPayload): Promise<unknown> {
     pendingInterrupt = payload
     pendingResolve = resolve
   })
+}
+
+export async function waitForDeathChoice(player: Player): Promise<'continue' | 'restart'> {
+  const result = await waitForHumanInput({
+    type: 'player_death',
+    player,
+    context: {},
+  })
+  return result as 'continue' | 'restart'
 }
 
 export class HumanActionProvider implements RoleActionProvider {

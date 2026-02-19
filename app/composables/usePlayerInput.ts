@@ -8,6 +8,7 @@ export type InterruptType
     | 'hunter_shot'
     | 'speech'
     | 'vote'
+    | 'player_death'
 
 export function usePlayerInput() {
   const waitingFor = ref<InterruptType | null>(null)

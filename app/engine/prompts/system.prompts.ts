@@ -2,7 +2,7 @@ import type { RoleType } from '~/types/game.types'
 import type { Player } from '~/types/player.types'
 
 const COMMON_RULES = `现在正在进行一场狼人杀游戏，每个角色需要根据自己的技能做出相应的行动，确保自己的能够达到自己的胜利目标，
-游戏总共存在{{totalPlayers}}位玩家，分别是{{aliveList}}`
+游戏总共存在{{totalPlayers}}位玩家，剩余存活的玩家是分别是{{aliveList}}`
 
 export const ROLE_SYSTEM_PROMPTS: Record<RoleType, string> = {
   werewolf: `你正在参与一场狼人杀游戏。
