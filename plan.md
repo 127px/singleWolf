@@ -11,7 +11,7 @@
 | **M1** | 项目初始化 + 基础配置 | ✅ |
 | **M2** | 核心类型定义 + Pinia Stores | ✅ |
 | **M3** | LangGraph 引擎核心 - 状态 + ActionProvider | ✅ |
-| **M4** | LangGraph 图定义 - 所有节点 + 子图 | 🔄 |
+| **M4** | LangGraph 图定义 - 所有节点 + 子图 | ✅ |
 | **M5** | 首页 UI（模型配置 + 角色介绍 + 开始游戏） | ⬜ |
 | **M6** | 游戏主界面 UI | ⬜ |
 | **M7** | Composables + 流式输出 + 整体联调 | ⬜ |
@@ -58,22 +58,22 @@
 - ✅ app/engine/utils/message-history.ts（信息可见性矩阵 + buildMessageHistory）
 - ✅ app/engine/utils/speak-order.ts（随机起始 + 顺时针发言序列）
 
-## M4：LangGraph 图定义 - 所有节点 + 子图
+## M4：LangGraph 图定义 - 所有节点 + 子图 ✅
 
-- ⬜ app/engine/nodes/wolf.node.ts
-- ⬜ app/engine/nodes/seer.node.ts
-- ⬜ app/engine/nodes/witch.node.ts
-- ⬜ app/engine/nodes/hunter.node.ts
-- ⬜ app/engine/nodes/speak.node.ts
-- ⬜ app/engine/nodes/vote.node.ts
-- ⬜ app/engine/nodes/nightSummary.node.ts
-- ⬜ app/engine/nodes/daySummary.node.ts
-- ⬜ app/engine/nodes/announce.node.ts
-- ⬜ app/engine/nodes/winCheck.node.ts
-- ⬜ app/engine/graph/night.graph.ts（夜晚子图）
-- ⬜ app/engine/graph/day.graph.ts（白天子图）
-- ⬜ app/engine/graph/vote.graph.ts（投票子图）
-- ⬜ app/engine/graph/game.graph.ts（主图 + 循环控制）
+- ✅ app/engine/nodes/wolf.node.ts（多狼共识决策）
+- ✅ app/engine/nodes/seer.node.ts（查验写入 PlayerMemory）
+- ✅ app/engine/nodes/witch.node.ts（解药/毒药/跳过，状态扣减）
+- ✅ app/engine/nodes/hunter.node.ts（开枪目标选择）
+- ✅ app/engine/nodes/speak.node.ts（统一发言节点 + 流式输出）
+- ✅ app/engine/nodes/vote.node.ts（统一投票节点）
+- ✅ app/engine/nodes/nightSummary.node.ts（汇总夜晚死亡）
+- ✅ app/engine/nodes/daySummary.node.ts（发言阶段收尾）
+- ✅ app/engine/nodes/announce.node.ts（白天公告夜晚结果）
+- ✅ app/engine/nodes/winCheck.node.ts（胜负判定 + 状态重置）
+- ✅ app/engine/graph/night.graph.ts（夜晚子图：狼→预言家→女巫→汇总）
+- ✅ app/engine/graph/day.graph.ts（白天子图：动态构建发言序列）
+- ✅ app/engine/graph/vote.graph.ts（投票子图：串行投票→统计）
+- ✅ app/engine/graph/game.graph.ts（主循环控制器 + 猎人触发 + 胜负判定）
 
 ## M5：首页 UI（模型配置 + 角色介绍 + 开始游戏）
 
