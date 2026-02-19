@@ -1,10 +1,27 @@
 <script setup lang="ts">
+const playersStore = usePlayersStore()
+const settingsStore = useSettingsStore()
+const router = useRouter()
+
+onMounted(() => {
+  if (playersStore.players.length === 0 || !settingsStore.isConfigured) {
+    router.push('/')
+  }
+})
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-950 text-white p-4">
-    <h1 class="text-2xl font-bold">
-      游戏进行中...
-    </h1>
-  </div>
+  <ClientOnly>
+    <GameBoard v-if="playersStore.players.length > 0" />
+    <template #fallback>
+      <div class="min-h-screen flex items-center justify-center bg-background">
+        <div class="text-center space-y-3">
+          <Icon name="lucide:loader" class="size-8 animate-spin text-primary mx-auto" />
+          <p class="text-sm text-muted-foreground">
+            正在加载游戏引擎...
+          </p>
+        </div>
+      </div>
+    </template>
+  </ClientOnly>
 </template>

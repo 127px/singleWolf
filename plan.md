@@ -13,7 +13,7 @@
 | **M3** | LangGraph 引擎核心 - 状态 + ActionProvider | ✅ |
 | **M4** | LangGraph 图定义 - 所有节点 + 子图 | ✅ |
 | **M5** | 首页 UI（模型配置 + 角色介绍 + 开始游戏） | ✅ |
-| **M6** | 游戏主界面 UI | 🔄 |
+| **M6** | 游戏主界面 UI | ✅ |
 | **M7** | Composables + 流式输出 + 整体联调 | ⬜ |
 | **M8** | Prompt 填充 + 测试 + 体验优化 | ⬜ |
 
@@ -85,18 +85,18 @@
 - ✅ 玩家角色选择（随机 / 5 种指定角色）
 - ✅ 开始游戏按钮（配置校验 → 跳转 /game）
 
-## M6：游戏主界面 UI
+## M6：游戏主界面 UI ✅
 
-- ⬜ app/pages/game.vue（游戏页布局）
-- ⬜ GameBoard.vue（游戏主界面容器）
-- ⬜ PlayerCard.vue / PlayerGrid.vue（玩家卡片 + 网格）
-- ⬜ PhaseIndicator.vue（阶段指示器）
-- ⬜ ChatPanel.vue / ChatBubble.vue / SystemMessage.vue（聊天面板）
-- ⬜ PlayerInput.vue（玩家输入框）
-- ⬜ NightOverlay.vue + NightActionPanel.vue（夜晚路由面板）
-- ⬜ WolfPanel / SeerPanel / WitchPanel / HunterPanel / NightWaiting
-- ⬜ VotePanel.vue / VoteResult.vue / VoteBar.vue
-- ⬜ WinScreen.vue（胜负结算界面）
+- ✅ app/pages/game.vue（ClientOnly + 未配置重定向）
+- ✅ GameBoard.vue（全局布局 + 所有面板组装）
+- ✅ PlayerCard.vue（头像/角色/存活/选中状态）/ PlayerGrid.vue（6 人网格）
+- ✅ PhaseIndicator.vue（阶段图标 + 轮次 + AI 思考状态）
+- ✅ ChatPanel.vue（滚动容器）/ ChatBubble.vue（流式光标）/ SystemMessage.vue
+- ✅ PlayerInput.vue（发言输入框 + Enter 发送）
+- ✅ NightOverlay.vue（过渡动画遮罩）+ NightActionPanel.vue（interrupt 路由）
+- ✅ WolfPanel / SeerPanel（含历史查验）/ WitchPanel（药物状态）/ HunterPanel / NightWaiting
+- ✅ VotePanel.vue（目标选择）/ VoteResult.vue（票数柱状图 + 明细折叠）
+- ✅ WinScreen.vue（阵营胜利 + 全员身份揭示 + 再来一局）
 
 ## M7：Composables + 流式输出 + 整体联调
 
