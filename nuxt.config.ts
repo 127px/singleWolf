@@ -18,6 +18,13 @@ export default defineNuxtConfig({
     componentDir: './app/components/ui',
   },
 
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false,
+    },
+  ],
+
   css: ['~/assets/css/main.css'],
 
   typescript: {
