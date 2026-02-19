@@ -10,8 +10,8 @@
 |--------|------|------|
 | **M1** | 项目初始化 + 基础配置 | ✅ |
 | **M2** | 核心类型定义 + Pinia Stores | ✅ |
-| **M3** | LangGraph 引擎核心 - 状态 + ActionProvider | ⬜ |
-| **M4** | LangGraph 图定义 - 所有节点 + 子图 | ⬜ |
+| **M3** | LangGraph 引擎核心 - 状态 + ActionProvider | ✅ |
+| **M4** | LangGraph 图定义 - 所有节点 + 子图 | 🔄 |
 | **M5** | 首页 UI（模型配置 + 角色介绍 + 开始游戏） | ⬜ |
 | **M6** | 游戏主界面 UI | ⬜ |
 | **M7** | Composables + 流式输出 + 整体联调 | ⬜ |
@@ -46,19 +46,17 @@
 - ✅ app/engine/utils/openai.client.ts（ChatOpenAI 工厂）
 - ✅ app/engine/utils/role.utils.ts（胜负判断 / 角色名称 / 投票统计 / 狼人共识）
 
-## M3：LangGraph 引擎核心 - 状态 + ActionProvider
+## M3：LangGraph 引擎核心 - 状态 + ActionProvider ✅
 
-- ⬜ app/engine/state/game.state.ts（GameStateAnnotation）
-- ⬜ app/engine/actions/types.ts（RoleActionProvider 接口）
-- ⬜ app/engine/actions/ai.provider.ts（AI 实现 + Zod Schema）
-- ⬜ app/engine/actions/human.provider.ts（Human 实现 + interrupt）
-- ⬜ app/engine/actions/factory.ts（Provider 工厂）
-- ⬜ app/engine/prompts/system.prompts.ts（角色 System Prompt 模板）
-- ⬜ app/engine/prompts/night.prompts.ts（夜晚 Action Prompt）
-- ⬜ app/engine/prompts/day.prompts.ts（白天 Action Prompt）
-- ⬜ app/engine/prompts/vote.prompts.ts（投票 Action Prompt）
-- ⬜ app/engine/utils/message-history.ts（信息可见性矩阵 + buildMessageHistory）
-- ⬜ app/engine/utils/speak-order.ts（随机起始 + 顺时针发言序列）
+- ✅ app/engine/state/game.state.ts（GameStateAnnotation 含完整图状态字段）
+- ✅ app/engine/actions/types.ts（RoleActionProvider 接口 + 所有 Context/Result 类型）
+- ✅ app/engine/actions/ai.provider.ts（AI 实现 + 5 个 Zod Schema + 流式发言）
+- ✅ app/engine/actions/human.provider.ts（Human 实现 + interrupt 等待机制）
+- ✅ app/engine/actions/factory.ts（Provider 工厂 isHuman 动态派发）
+- ✅ app/engine/prompts/system.prompts.ts（5 角色完整 System Prompt + buildFinalSystemPrompt）
+- ✅ app/engine/prompts/action.prompts.ts（6 个 Action Prompt：杀人/查验/用药/发言/投票/开枪）
+- ✅ app/engine/utils/message-history.ts（信息可见性矩阵 + buildMessageHistory）
+- ✅ app/engine/utils/speak-order.ts（随机起始 + 顺时针发言序列）
 
 ## M4：LangGraph 图定义 - 所有节点 + 子图
 
