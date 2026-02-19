@@ -1,7 +1,7 @@
 import type { Faction, GamePhase } from '~/types/game.types'
 import type { ChatMessage } from '~/types/message.types'
 import type { Player } from '~/types/player.types'
-import { Annotation } from '@langchain/langgraph'
+import { Annotation } from '@langchain/langgraph/web'
 
 export const GameStateAnnotation = Annotation.Root({
   phase: Annotation<GamePhase>(),

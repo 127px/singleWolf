@@ -1,5 +1,5 @@
 import type { GameGraphState } from '~/engine/state/game.state'
-import { StateGraph } from '@langchain/langgraph'
+import { StateGraph } from '@langchain/langgraph/web'
 import { announceNode } from '~/engine/nodes/announce.node'
 import { daySummaryNode } from '~/engine/nodes/daySummary.node'
 import { speakNode } from '~/engine/nodes/speak.node'

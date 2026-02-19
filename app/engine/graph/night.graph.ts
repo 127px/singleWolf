@@ -1,4 +1,4 @@
-import { StateGraph } from '@langchain/langgraph'
+import { StateGraph } from '@langchain/langgraph/web'
 import { nightSummaryNode } from '~/engine/nodes/nightSummary.node'
 import { seerNode } from '~/engine/nodes/seer.node'
 import { witchNode } from '~/engine/nodes/witch.node'

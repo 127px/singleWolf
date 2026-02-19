@@ -1,5 +1,5 @@
 import type { GameGraphState } from '~/engine/state/game.state'
-import { StateGraph } from '@langchain/langgraph'
+import { StateGraph } from '@langchain/langgraph/web'
 import { voteNode } from '~/engine/nodes/vote.node'
 import { GameStateAnnotation } from '~/engine/state/game.state'
 import { resolveVoteResult } from '~/engine/utils/role.utils'
