@@ -13,7 +13,7 @@ const playersStore = usePlayersStore()
 </script>
 
 <template>
-  <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
+  <div class="grid grid-cols-5 gap-2">
     <PlayerCard
       v-for="player in playersStore.players"
       :key="player.id"

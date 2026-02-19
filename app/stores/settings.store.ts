@@ -4,12 +4,23 @@ import { PROVIDER_PRESETS } from '~/types/llm.types'
 export const useSettingsStore = defineStore('settings', () => {
   const runtimeConfig = useRuntimeConfig()
 
-  const provider = ref<LLMProvider>(
+  // 所有 LLM 配置都持久化到 localStorage，刷新页面后不需要重新输入
+  const provider = useLocalStorage<LLMProvider>(
+    'werewolf_llm_provider',
     (runtimeConfig.public.llmProvider as LLMProvider) || 'openai-compatible',
   )
-  const apiBaseUrl = ref(runtimeConfig.public.llmBaseUrl as string || '')
-  const apiKey = useSessionStorage('werewolf_api_key', runtimeConfig.public.llmApiKey as string || '')
-  const modelId = ref(runtimeConfig.public.llmModel as string || '')
+  const apiBaseUrl = useLocalStorage(
+    'werewolf_llm_base_url',
+    runtimeConfig.public.llmBaseUrl as string || '',
+  )
+  const apiKey = useLocalStorage(
+    'werewolf_api_key',
+    runtimeConfig.public.llmApiKey as string || '',
+  )
+  const modelId = useLocalStorage(
+    'werewolf_llm_model',
+    runtimeConfig.public.llmModel as string || '',
+  )
 
   const isConfigured = computed(() =>
     apiKey.value.length > 0 && modelId.value.length > 0 && apiBaseUrl.value.length > 0,

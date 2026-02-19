@@ -1,9 +1,20 @@
 import type { Faction, RoleType } from '~/types/game.types'
 import type { Player } from '~/types/player.types'
 
-const PLAYER_NAMES = ['阿尔法', '贝塔', '伽马', '德尔塔', '艾普西隆', '泽塔']
+const PLAYER_NAMES = ['1号玩家', '2号玩家', '3号玩家', '4号玩家', '5号玩家', '6号玩家', '7号玩家', '8号玩家', '9号玩家', '10号玩家']
 
-const ROLE_POOL: RoleType[] = ['werewolf', 'werewolf', 'seer', 'witch', 'hunter', 'villager']
+const ROLE_POOL: RoleType[] = [
+  'werewolf',
+  'werewolf',
+  'werewolf',
+  'seer',
+  'witch',
+  'hunter',
+  'villager',
+  'villager',
+  'villager',
+  'villager',
+]
 
 export const usePlayersStore = defineStore('players', () => {
   const players = ref<Player[]>([])

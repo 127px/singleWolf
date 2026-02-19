@@ -222,7 +222,7 @@ function startGame() {
 
             <div class="flex items-center justify-between">
               <div class="text-sm text-muted-foreground">
-                6 名玩家 · 2 狼人 · 1 预言家 · 1 女巫 · 1 猎人 · 1 村民
+                10 名玩家 · 3 狼人 · 1 预言家 · 1 女巫 · 1 猎人 · 4 村民
               </div>
               <Button
                 size="lg"

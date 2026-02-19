@@ -23,8 +23,8 @@ export function createDayGraph(alivePlayers: GameGraphState['alivePlayers']) {
     graph.addNode(nodeId, async (state: GameGraphState) => speakNode(state, player.id))
   }
 
-  // 添加发言总结节点
-  graph.addNode('daySummary', daySummaryNode)
+  // 添加发言总结节点（注意：节点名不能与状态字段名 daySummary 相同）
+  graph.addNode('dayEnd', daySummaryNode)
 
   // 连接边：announce → 第一个发言者
   graph.addEdge('__start__', 'announce')
@@ -40,14 +40,14 @@ export function createDayGraph(alivePlayers: GameGraphState['alivePlayers']) {
       )
     }
 
-    // 最后一个发言者 → daySummary
-    graph.addEdge(`speak_${speakOrder[speakOrder.length - 1]!.id}`, 'daySummary')
+    // 最后一个发言者 → dayEnd
+    graph.addEdge(`speak_${speakOrder[speakOrder.length - 1]!.id}`, 'dayEnd')
   }
   else {
-    graph.addEdge('announce', 'daySummary')
+    graph.addEdge('announce', 'dayEnd')
   }
 
-  graph.addEdge('daySummary', '__end__')
+  graph.addEdge('dayEnd', '__end__')
 
   return graph.compile()
 }

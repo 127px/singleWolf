@@ -34,5 +34,4 @@ function onSubmit(result: NightActionResult) {
     v-else-if="interrupt?.type === 'hunter_shot'"
     @submit="onSubmit"
   />
-  <NightWaiting v-else />
 </template>

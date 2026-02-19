@@ -105,7 +105,9 @@ export class AIActionProvider implements RoleActionProvider {
     ]
 
     const result = await withRetry(async () => {
-      const structured = llm.withStructuredOutput(schema)
+      const structured = llm.withStructuredOutput(schema, {
+        method: 'functionCalling',
+      })
       return structured.invoke(messages)
     }, `nightAction:${role}:${this.player.id}`)
 
@@ -190,7 +192,9 @@ export class AIActionProvider implements RoleActionProvider {
     ]
 
     const result = await withRetry(async () => {
-      const structured = llm.withStructuredOutput(VoteSchema)
+      const structured = llm.withStructuredOutput(VoteSchema, {
+        method: 'functionCalling',
+      })
       return structured.invoke(messages)
     }, `vote:${this.player.id}`)
     return result.targetId
@@ -224,7 +228,9 @@ export class AIActionProvider implements RoleActionProvider {
     ]
 
     const result = await withRetry(async () => {
-      const structured = llm.withStructuredOutput(HunterShotSchema)
+      const structured = llm.withStructuredOutput(HunterShotSchema, {
+        method: 'functionCalling',
+      })
       return structured.invoke(messages)
     }, `hunterShot:${this.player.id}`)
     return result.targetId
