@@ -8,7 +8,7 @@ export const useSettingsStore = defineStore('settings', () => {
     (runtimeConfig.public.llmProvider as LLMProvider) || 'openai-compatible',
   )
   const apiBaseUrl = ref(runtimeConfig.public.llmBaseUrl as string || '')
-  const apiKey = ref(runtimeConfig.public.llmApiKey as string || '')
+  const apiKey = useSessionStorage('werewolf_api_key', runtimeConfig.public.llmApiKey as string || '')
   const modelId = ref(runtimeConfig.public.llmModel as string || '')
 
   const isConfigured = computed(() =>

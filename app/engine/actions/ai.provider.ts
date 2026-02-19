@@ -12,6 +12,7 @@ import { ACTION_PROMPTS } from '~/engine/prompts/action.prompts'
 import { buildFinalSystemPrompt } from '~/engine/prompts/system.prompts'
 import { buildMessageHistory } from '~/engine/utils/message-history'
 import { getLLMClient } from '~/engine/utils/openai.client'
+import { withRetry } from '~/engine/utils/retry'
 
 const KillSchema = z.object({
   targetId: z.string().describe('要杀死的玩家ID，必须是存活玩家列表中的某一个'),
@@ -103,8 +104,10 @@ export class AIActionProvider implements RoleActionProvider {
       { role: 'user' as const, content: prompt },
     ]
 
-    const structured = llm.withStructuredOutput(schema)
-    const result = await structured.invoke(messages)
+    const result = await withRetry(async () => {
+      const structured = llm.withStructuredOutput(schema)
+      return structured.invoke(messages)
+    }, `nightAction:${role}:${this.player.id}`)
 
     return this.mapToNightResult(role, result)
   }
@@ -186,8 +189,10 @@ export class AIActionProvider implements RoleActionProvider {
       { role: 'user' as const, content: prompt },
     ]
 
-    const structured = llm.withStructuredOutput(VoteSchema)
-    const result = await structured.invoke(messages)
+    const result = await withRetry(async () => {
+      const structured = llm.withStructuredOutput(VoteSchema)
+      return structured.invoke(messages)
+    }, `vote:${this.player.id}`)
     return result.targetId
   }
 
@@ -218,8 +223,10 @@ export class AIActionProvider implements RoleActionProvider {
       { role: 'user' as const, content: prompt },
     ]
 
-    const structured = llm.withStructuredOutput(HunterShotSchema)
-    const result = await structured.invoke(messages)
+    const result = await withRetry(async () => {
+      const structured = llm.withStructuredOutput(HunterShotSchema)
+      return structured.invoke(messages)
+    }, `hunterShot:${this.player.id}`)
     return result.targetId
   }
 

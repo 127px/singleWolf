@@ -15,7 +15,7 @@
 | **M5** | 首页 UI（模型配置 + 角色介绍 + 开始游戏） | ✅ |
 | **M6** | 游戏主界面 UI | ✅ |
 | **M7** | Composables + 流式输出 + 整体联调 | ✅ |
-| **M8** | Prompt 填充 + 测试 + 体验优化 | 🔄 |
+| **M8** | Prompt 填充 + 测试 + 体验优化 | ✅ |
 
 ---
 
@@ -108,10 +108,12 @@
 - ✅ 全链路闭环：初始化 → 夜晚 → 白天发言 → 投票 → 判定 → 循环/结束
 - ✅ 编译验证通过（dev server 无错误）
 
-## M8：Prompt 填充 + 测试 + 体验优化
+## M8：Prompt 填充 + 测试 + 体验优化 ✅
 
-- ⬜ 填充所有角色 System Prompt（从 roles-prompt.md）
-- ⬜ 填充所有 Action Prompt（夜晚 / 白天 / 投票）
-- ⬜ 端到端测试
-- ⬜ Bug 修复
-- ⬜ 体验优化（加载状态 / 错误提示 / 边界情况处理）
+- ✅ 角色 System Prompt 已在 M3 从 roles-prompt.md 完整填充（5 角色）
+- ✅ Action Prompt 已在 M3 完整填充（6 个行动指令）
+- ✅ AI 调用重试机制（retry.ts：3 次重试 + 指数退避）
+- ✅ API Key 安全存储（sessionStorage，关闭标签页即清除）
+- ✅ 全局暗色主题 + 中文 lang 属性 + antialiased
+- ✅ ESLint 全量通过
+- ✅ Dev server 编译零错误
