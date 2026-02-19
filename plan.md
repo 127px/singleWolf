@@ -14,8 +14,8 @@
 | **M4** | LangGraph 图定义 - 所有节点 + 子图 | ✅ |
 | **M5** | 首页 UI（模型配置 + 角色介绍 + 开始游戏） | ✅ |
 | **M6** | 游戏主界面 UI | ✅ |
-| **M7** | Composables + 流式输出 + 整体联调 | ⬜ |
-| **M8** | Prompt 填充 + 测试 + 体验优化 | ⬜ |
+| **M7** | Composables + 流式输出 + 整体联调 | ✅ |
+| **M8** | Prompt 填充 + 测试 + 体验优化 | 🔄 |
 
 ---
 
@@ -98,17 +98,15 @@
 - ✅ VotePanel.vue（目标选择）/ VoteResult.vue（票数柱状图 + 明细折叠）
 - ✅ WinScreen.vue（阵营胜利 + 全员身份揭示 + 再来一局）
 
-## M7：Composables + 流式输出 + 整体联调
+## M7：Composables + 流式输出 + 整体联调 ✅
 
-- ⬜ app/composables/useGame.ts（游戏流程入口）
-- ⬜ app/composables/useGameGraph.ts（LangGraph 主图初始化）
-- ⬜ app/composables/useNightPhase.ts
-- ⬜ app/composables/useDayPhase.ts
-- ⬜ app/composables/useVotePhase.ts
-- ⬜ app/composables/usePlayerInput.ts（interrupt 机制）
-- ⬜ app/composables/useStreamMessage.ts（流式打字机效果）
-- ⬜ 全链路联调：初始化 → 夜晚 → 白天 → 投票 → 判定 → 循环
-- ⬜ 动画效果（@vueuse/motion）
+- ✅ app/composables/useGame.ts（游戏流程入口：LLM 初始化 + prompt 注入 + 完整回调链路）
+- ✅ app/composables/usePlayerInput.ts（interrupt 轮询机制 + submit 解锁）
+- ✅ app/composables/useStreamMessage.ts（流式打字机效果）
+- ✅ GameBoard.vue 全面重构（集成 useGame + usePlayerInput，角色信息面板）
+- ✅ game.graph.ts 增强（onVoteResults 回调 + sleep 延迟让 UI 更新）
+- ✅ 全链路闭环：初始化 → 夜晚 → 白天发言 → 投票 → 判定 → 循环/结束
+- ✅ 编译验证通过（dev server 无错误）
 
 ## M8：Prompt 填充 + 测试 + 体验优化
 

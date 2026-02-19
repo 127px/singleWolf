@@ -11,14 +11,10 @@ export interface GameLoopCallbacks {
   onNightDeaths: (deaths: string[]) => void
   onPlayerEliminated: (playerId: string, cause: 'vote' | 'hunter') => void
   onHunterTrigger: (hunterId: string) => void
+  onVoteResults: (votes: Record<string, string>, eliminatedId: string | null) => void
   onGameEnd: (winner: 'werewolf' | 'villager') => void
 }
 
-/**
- * 主游戏循环控制器。
- * 不使用单一 StateGraph 做整个游戏循环，而是手动编排子图的调用，
- * 因为白天/投票子图需要根据存活玩家动态构建。
- */
 export async function runGameLoop(
   initialState: GameGraphState,
   callbacks: GameLoopCallbacks,
@@ -42,7 +38,7 @@ export async function runGameLoop(
     state.alivePlayers = state.players.filter(p => p.isAlive)
     callbacks.onNightDeaths(nightDeaths)
 
-    // 检查猎人是否在夜晚死亡（被狼杀但不是被女巫毒杀的情况）
+    // 猎人夜间触发（被狼杀但不是被毒杀）
     for (const deadId of nightDeaths) {
       const deadPlayer = state.players.find(p => p.id === deadId)
       if (deadPlayer?.role === 'hunter' && deadId !== state.witchPoisonTarget) {
@@ -70,6 +66,9 @@ export async function runGameLoop(
     state.speeches = []
     callbacks.onPhaseChange('day', state.round)
 
+    // 短暂延迟让 UI 有时间更新
+    await sleep(500)
+
     const dayGraph = createDayGraph(state.alivePlayers)
     const dayResult = await dayGraph.invoke(state)
     state = { ...state, ...dayResult }
@@ -79,9 +78,14 @@ export async function runGameLoop(
     state.votes = {}
     callbacks.onPhaseChange('vote', state.round)
 
+    await sleep(300)
+
     const voteGraph = createVoteGraph(state.alivePlayers)
     const voteResult = await voteGraph.invoke(state)
     state = { ...state, ...voteResult }
+
+    // 显示投票结果
+    callbacks.onVoteResults(state.votes || {}, state.eliminatedByVote)
 
     // 处理投票出局
     if (state.eliminatedByVote) {
@@ -89,7 +93,7 @@ export async function runGameLoop(
       state.alivePlayers = state.players.filter(p => p.isAlive)
       callbacks.onPlayerEliminated(state.eliminatedByVote, 'vote')
 
-      // 检查被投票出局者是否是猎人
+      // 检查猎人是否被投票出局
       const eliminated = state.players.find(p => p.id === state.eliminatedByVote)
       if (eliminated?.role === 'hunter') {
         callbacks.onHunterTrigger(eliminated.id)
@@ -131,4 +135,8 @@ function killPlayer(players: Player[], id: string): void {
   if (player) {
     player.isAlive = false
   }
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
