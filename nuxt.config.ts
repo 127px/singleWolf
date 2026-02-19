@@ -1,0 +1,57 @@
+import tailwindcss from '@tailwindcss/vite'
+
+export default defineNuxtConfig({
+  future: {
+    compatibilityVersion: 4,
+  },
+
+  modules: [
+    '@pinia/nuxt',
+    '@vueuse/nuxt',
+    '@nuxt/icon',
+    '@vueuse/motion/nuxt',
+  ],
+
+  css: ['~/assets/css/main.css'],
+
+  typescript: {
+    strict: true,
+  },
+
+  nitro: {
+    prerender: {
+      routes: ['/', '/game'],
+    },
+  },
+
+  routeRules: {
+    '/': { prerender: true },
+    '/game': { prerender: true },
+  },
+
+  runtimeConfig: {
+    public: {
+      llmProvider: '',
+      llmBaseUrl: '',
+      llmApiKey: '',
+      llmModel: '',
+    },
+  },
+
+  vite: {
+    plugins: [
+      tailwindcss(),
+    ],
+  },
+
+  app: {
+    head: {
+      title: 'AI 狼人杀',
+      meta: [
+        { name: 'description', content: '与 AI 对决的沉浸式狼人杀体验' },
+      ],
+    },
+  },
+
+  compatibilityDate: '2025-01-01',
+})
