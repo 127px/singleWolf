@@ -1,10 +1,10 @@
 # AI 狼人杀 — 技术设计与选型文档
 
-> 版本：v1.2  
-> 对应产品文档：project.md  
-> 目标：MVP 单人版，SSG 静态部署，无后端  
-> v1.1 变更：渲染模式 SPA → SSG；新增角色行为抽象层（Strategy 模式），支持玩家扮演任意角色  
-> v1.2 变更：新增消息历史栈/信息可见性矩阵；白天发言改为随机起始+顺时针串行；Prompt 预留占位；多模型适配方案  
+> 版本：v1.2
+> 对应产品文档：project.md
+> 目标：MVP 单人版，SSG 静态部署，无后端
+> v1.1 变更：渲染模式 SPA → SSG；新增角色行为抽象层（Strategy 模式），支持玩家扮演任意角色
+> v1.2 变更：新增消息历史栈/信息可见性矩阵；白天发言改为随机起始+顺时针串行；Prompt 预留占位；多模型适配方案
 > v1.3 变更：新增 LLM 输出策略（withStructuredOutput vs stream）；补充各决策节点 Zod Schema；说明 ToolNode/ReAct 不适用原因
 
 ---
@@ -114,19 +114,19 @@ NUXT_PUBLIC_LLM_MODEL=deepseek-chat
 
 ```ts
 // app/types/llm.types.ts
-export type LLMProvider =
-  | 'openai'
-  | 'deepseek'
-  | 'qwen'            // 通义千问
-  | 'moonshot'        // Kimi
-  | 'openrouter'      // 统一入口，一个 Key 访问所有模型
-  | 'openai-compatible' // 自定义兼容接口
+export type LLMProvider
+  = | 'openai'
+    | 'deepseek'
+    | 'qwen' // 通义千问
+    | 'moonshot' // Kimi
+    | 'openrouter' // 统一入口，一个 Key 访问所有模型
+    | 'openai-compatible' // 自定义兼容接口
 
 export interface LLMProviderConfig {
   id: LLMProvider
   name: string
   baseUrl: string
-  models: Array<{ id: string; name: string }>
+  models: Array<{ id: string, name: string }>
 }
 
 export const PROVIDER_PRESETS: LLMProviderConfig[] = [
@@ -415,22 +415,22 @@ export interface GameState {
 ```ts
 // app/types/player.types.ts
 export interface Player {
-  id: string              // 'player_0' ~ 'player_5'
-  name: string            // 显示名称
-  seatIndex: number       // 座位号 0~5，用于确定顺时针发言顺序
+  id: string // 'player_0' ~ 'player_5'
+  name: string // 显示名称
+  seatIndex: number // 座位号 0~5，用于确定顺时针发言顺序
   role: RoleType
   faction: Faction
   isAlive: boolean
-  isHuman: boolean        // 唯一 true 的是真人玩家（可以是任意角色）
-  systemPrompt: string    // 该角色的 system prompt（运行时注入）
-  memory: PlayerMemory    // 角色私有记忆
+  isHuman: boolean // 唯一 true 的是真人玩家（可以是任意角色）
+  systemPrompt: string // 该角色的 system prompt（运行时注入）
+  memory: PlayerMemory // 角色私有记忆
 }
 
 export interface PlayerMemory {
   // 预言家专用：已查验记录（人类玩家也用，显示在 UI 上）
-  seerResults?: Array<{ targetId: string; faction: Faction }>
+  seerResults?: Array<{ targetId: string, faction: Faction }>
   // 女巫专用：药物使用状态
-  witchPotions?: { antidote: boolean; poison: boolean }
+  witchPotions?: { antidote: boolean, poison: boolean }
   // AI 专用：内部推理参考
   suspicions?: Record<string, number> // targetId → 怀疑度分 0~10
 }
@@ -445,7 +445,7 @@ export interface PlayerMemory {
 export interface NightActionContext {
   player: Player
   alivePlayers: Player[]
-  nightKillTarget?: string     // 仅女巫可见：本轮被狼人杀的人
+  nightKillTarget?: string // 仅女巫可见：本轮被狼人杀的人
 }
 
 // 统一的角色行为接口
@@ -458,12 +458,12 @@ export interface RoleActionProvider {
   vote: (ctx: VoteContext) => Promise<string>
 }
 
-export type NightActionResult =
-  | { type: 'kill'; targetId: string }           // 狼人杀人
-  | { type: 'inspect'; targetId: string }        // 预言家查验
-  | { type: 'witch'; action: 'save' | 'poison' | 'skip'; targetId?: string }
-  | { type: 'hunter_shot'; targetId: string }    // 猎人开枪
-  | { type: 'none' }                             // 村民/无行动
+export type NightActionResult
+  = | { type: 'kill', targetId: string } // 狼人杀人
+    | { type: 'inspect', targetId: string } // 预言家查验
+    | { type: 'witch', action: 'save' | 'poison' | 'skip', targetId?: string }
+    | { type: 'hunter_shot', targetId: string } // 猎人开枪
+    | { type: 'none' } // 村民/无行动
 ```
 
 ```ts
@@ -473,8 +473,8 @@ import { HumanActionProvider } from './human.provider'
 
 export function createActionProvider(player: Player): RoleActionProvider {
   return player.isHuman
-    ? new HumanActionProvider(player)  // 内部使用 interrupt() 等 UI
-    : new AIActionProvider(player)     // 内部调用 LLM
+    ? new HumanActionProvider(player) // 内部使用 interrupt() 等 UI
+    : new AIActionProvider(player) // 内部调用 LLM
 }
 ```
 
@@ -492,7 +492,7 @@ export interface ChatMessage {
   phase: GamePhase
   round: number
   timestamp: number
-  isStreaming?: boolean    // 流式输出中
+  isStreaming?: boolean // 流式输出中
 }
 ```
 
@@ -516,20 +516,20 @@ export const GameStateAnnotation = Annotation.Root({
   alivePlayers: Annotation<Player[]>(),
 
   // 夜晚阶段临时状态
-  nightKillTarget: Annotation<string | null>(),    // 狼人选定的目标
-  witchSaved: Annotation<boolean>(),               // 女巫是否用了解药
-  witchPoisonTarget: Annotation<string | null>(),  // 女巫毒药目标
-  nightDeaths: Annotation<string[]>(),             // 最终夜晚死亡名单
+  nightKillTarget: Annotation<string | null>(), // 狼人选定的目标
+  witchSaved: Annotation<boolean>(), // 女巫是否用了解药
+  witchPoisonTarget: Annotation<string | null>(), // 女巫毒药目标
+  nightDeaths: Annotation<string[]>(), // 最终夜晚死亡名单
 
   // 白天阶段
   speeches: Annotation<ChatMessage[]>({
-    reducer: (a, b) => [...a, ...b],               // 发言追加合并
+    reducer: (a, b) => [...a, ...b], // 发言追加合并
     default: () => [],
   }),
   daySummary: Annotation<string>(),
 
   // 投票阶段
-  votes: Annotation<Record<string, string>>(),     // voterId → targetId
+  votes: Annotation<Record<string, string>>(), // voterId → targetId
   eliminatedByVote: Annotation<string | null>(),
 
   // 胜负
@@ -598,11 +598,11 @@ export function buildMessageHistory(
     // 猎人、村民：夜晚无任何信息
 
     // ── 白天阶段：所有角色共享 ──
-    messages.push(round.dayAnnouncement)     // 系统公告（谁死了）
-    messages.push(...round.speeches)          // 所有人发言（完整顺序）
-    messages.push(...round.voteResults)       // 投票结果
+    messages.push(round.dayAnnouncement) // 系统公告（谁死了）
+    messages.push(...round.speeches) // 所有人发言（完整顺序）
+    messages.push(...round.voteResults) // 投票结果
     if (round.lastWords)
-      messages.push(round.lastWords)          // 出局者遗言
+      messages.push(round.lastWords) // 出局者遗言
   }
 
   return messages
@@ -623,18 +623,18 @@ export interface RoundLog {
 
   // 夜晚事件（按角色隔离）
   nightEvents: {
-    wolfDiscussion: ChatMessage[]     // 狼人内部讨论
-    killDecision: ChatMessage         // 最终击杀目标
-    seerAction: ChatMessage           // 预言家查验
-    witchNotification: ChatMessage    // 女巫收到的被杀者通知
-    witchAction: ChatMessage          // 女巫操作记录
+    wolfDiscussion: ChatMessage[] // 狼人内部讨论
+    killDecision: ChatMessage // 最终击杀目标
+    seerAction: ChatMessage // 预言家查验
+    witchNotification: ChatMessage // 女巫收到的被杀者通知
+    witchAction: ChatMessage // 女巫操作记录
   }
 
   // 白天事件（公共）
-  dayAnnouncement: ChatMessage        // 系统宣告夜晚结果
-  speeches: ChatMessage[]             // 所有发言（按顺序）
-  voteResults: ChatMessage[]          // 投票统计
-  lastWords?: ChatMessage             // 出局者遗言
+  dayAnnouncement: ChatMessage // 系统宣告夜晚结果
+  speeches: ChatMessage[] // 所有发言（按顺序）
+  voteResults: ChatMessage[] // 投票统计
+  lastWords?: ChatMessage // 出局者遗言
 }
 ```
 
@@ -643,9 +643,9 @@ export interface RoundLog {
 ```ts
 // 每次 AI 需要行动时，组装其完整的消息序列
 const messages = [
-  { role: 'system', content: player.systemPrompt },  // 角色 prompt
-  ...buildMessageHistory(player, gameLog),            // 按可见性过滤的历史
-  { role: 'user', content: currentActionPrompt },     // 当前动作指令
+  { role: 'system', content: player.systemPrompt }, // 角色 prompt
+  ...buildMessageHistory(player, gameLog), // 按可见性过滤的历史
+  { role: 'user', content: currentActionPrompt }, // 当前动作指令
 ]
 
 const response = await llm.invoke(messages)
@@ -756,8 +756,8 @@ async function speakNode(state: GameGraphState, playerId: string) {
   // 关键：传入到目前为止所有人的发言，保证上下文完整
   const speech = await provider.speak({
     player,
-    previousSpeeches: state.speeches,   // 包含本轮之前所有发言
-    gameLog: state.gameLog,             // 用于构建该角色的完整 messageHistory
+    previousSpeeches: state.speeches, // 包含本轮之前所有发言
+    gameLog: state.gameLog, // 用于构建该角色的完整 messageHistory
     alivePlayers: state.alivePlayers,
   })
 
@@ -791,10 +791,10 @@ export const useGameStore = defineStore('game', () => {
   const phase = ref<GamePhase>('init')
   const round = ref(0)
   const winner = ref<Faction | null>(null)
-  const isAiThinking = ref(false)   // AI 运行中，禁止玩家操作
+  const isAiThinking = ref(false) // AI 运行中，禁止玩家操作
 
   // LangGraph 实例引用（仅运行时，不持久化）
-  let graphInstance: CompiledGraph | null = null
+  const graphInstance: CompiledGraph | null = null
 
   async function startGame() { /* 初始化图并启动 */ }
   async function resumeWithPlayerInput(input: string) { /* interrupt 恢复 */ }
@@ -821,7 +821,8 @@ export const usePlayersStore = defineStore('players', () => {
 
   function killPlayer(id: string) {
     const p = players.value.find(p => p.id === id)
-    if (p) p.isAlive = false
+    if (p)
+      p.isAlive = false
   }
 
   function initPlayers(humanRole: RoleType) { /* 随机分配角色 */ }
@@ -843,9 +844,7 @@ export const useSettingsStore = defineStore('settings', () => {
     (runtimeConfig.public.llmProvider as LLMProvider) || 'openai-compatible'
   )
   const apiBaseUrl = ref(runtimeConfig.public.llmBaseUrl || '')
-  const apiKey = useSessionStorage('werewolf_api_key',
-    runtimeConfig.public.llmApiKey || ''
-  )
+  const apiKey = useSessionStorage('werewolf_api_key', runtimeConfig.public.llmApiKey || '')
   const modelId = ref(runtimeConfig.public.llmModel || '')
 
   const isConfigured = computed(() =>
@@ -890,9 +889,9 @@ export const useSettingsStore = defineStore('settings', () => {
 // 角色 system prompt 模板（待填充）
 export const ROLE_SYSTEM_PROMPTS: Record<RoleType, string> = {
   werewolf: '', // TODO: 填充狼人 system prompt
-  seer: '',     // TODO: 填充预言家 system prompt
-  witch: '',    // TODO: 填充女巫 system prompt
-  hunter: '',   // TODO: 填充猎人 system prompt
+  seer: '', // TODO: 填充预言家 system prompt
+  witch: '', // TODO: 填充女巫 system prompt
+  hunter: '', // TODO: 填充猎人 system prompt
   villager: '', // TODO: 填充村民 system prompt
 }
 
@@ -922,16 +921,16 @@ export function buildFinalSystemPrompt(
 // 也预留为占位符，待后续填充
 export const ACTION_PROMPTS = {
   // 夜晚
-  wolfKill: '',       // TODO: 狼人选择杀人目标的指令
-  seerInspect: '',    // TODO: 预言家选择查验目标的指令
-  witchDecision: '',  // TODO: 女巫选择救/毒/跳过的指令
+  wolfKill: '', // TODO: 狼人选择杀人目标的指令
+  seerInspect: '', // TODO: 预言家选择查验目标的指令
+  witchDecision: '', // TODO: 女巫选择救/毒/跳过的指令
 
   // 白天
-  daySpeech: '',      // TODO: 白天发言的指令
-  vote: '',           // TODO: 投票的指令
+  daySpeech: '', // TODO: 白天发言的指令
+  vote: '', // TODO: 投票的指令
 
   // 特殊
-  hunterShot: '',     // TODO: 猎人开枪的指令
+  hunterShot: '', // TODO: 猎人开枪的指令
 }
 ```
 
@@ -1144,13 +1143,13 @@ LangGraph 图执行
 
 ```ts
 // app/composables/usePlayerInput.ts
-export type InterruptType =
-  | 'wolf_kill'       // 狼人选杀人目标
-  | 'seer_inspect'    // 预言家选查验目标
-  | 'witch_action'    // 女巫救/毒/跳过
-  | 'hunter_shot'     // 猎人开枪
-  | 'speech'          // 白天发言
-  | 'vote'            // 投票
+export type InterruptType
+  = | 'wolf_kill' // 狼人选杀人目标
+    | 'seer_inspect' // 预言家选查验目标
+    | 'witch_action' // 女巫救/毒/跳过
+    | 'hunter_shot' // 猎人开枪
+    | 'speech' // 白天发言
+    | 'vote' // 投票
 
 export function usePlayerInput() {
   const gameStore = useGameStore()
@@ -1308,10 +1307,10 @@ export default defineNuxtConfig({
   // 生产阶段用户在 UI 手动填入（这些变量为空即可）
   runtimeConfig: {
     public: {
-      llmProvider: '',   // NUXT_PUBLIC_LLM_PROVIDER
-      llmBaseUrl: '',    // NUXT_PUBLIC_LLM_BASE_URL
-      llmApiKey: '',     // NUXT_PUBLIC_LLM_API_KEY
-      llmModel: '',      // NUXT_PUBLIC_LLM_MODEL
+      llmProvider: '', // NUXT_PUBLIC_LLM_PROVIDER
+      llmBaseUrl: '', // NUXT_PUBLIC_LLM_BASE_URL
+      llmApiKey: '', // NUXT_PUBLIC_LLM_API_KEY
+      llmModel: '', // NUXT_PUBLIC_LLM_MODEL
     },
   },
 
@@ -1411,5 +1410,5 @@ pnpm preview
 
 ---
 
-*文档生成时间：2026-02-18*  
+*文档生成时间：2026-02-18*
 *对应产品文档版本：project.md*

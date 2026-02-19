@@ -8,8 +8,8 @@
 
 | 里程碑 | 内容 | 状态 |
 |--------|------|------|
-| **M1** | 项目初始化 + 基础配置 | ⬜ |
-| **M2** | 核心类型定义 + Pinia Stores | ⬜ |
+| **M1** | 项目初始化 + 基础配置 | ✅ |
+| **M2** | 核心类型定义 + Pinia Stores | ✅ |
 | **M3** | LangGraph 引擎核心 - 状态 + ActionProvider | ⬜ |
 | **M4** | LangGraph 图定义 - 所有节点 + 子图 | ⬜ |
 | **M5** | 首页 UI（模型配置 + 角色介绍 + 开始游戏） | ⬜ |
@@ -19,32 +19,32 @@
 
 ---
 
-## M1：项目初始化 + 基础配置
+## M1：项目初始化 + 基础配置 ✅
 
-- ⬜ 创建 Nuxt 3 项目（pnpm）
-- ⬜ 安装核心依赖（LangGraph / OpenAI SDK / Pinia / VueUse / Iconify / Motion）
-- ⬜ 安装 UI 相关（Tailwind CSS v4 / shadcn-vue）
-- ⬜ 安装开发工具（ESLint @antfu/eslint-config / Vitest）
-- ⬜ 配置 nuxt.config.ts（SSG / modules / runtimeConfig）
-- ⬜ 配置 ESLint
-- ⬜ 配置 Tailwind CSS v4 入口
-- ⬜ 创建 .env 模板 + .gitignore
-- ⬜ 创建目录结构骨架
-- ⬜ 初始化 Git 仓库
-- ⬜ 验证 `pnpm dev` 可正常启动
+- ✅ 创建 Nuxt 3 项目（pnpm）— Nuxt 3.21.1 + compat v4 app 目录约定
+- ✅ 安装核心依赖（LangGraph / OpenAI SDK / Pinia / VueUse / Iconify / Motion）
+- ✅ 安装 UI 相关（Tailwind CSS v4 Vite 插件）— shadcn-vue 将在 M5 初始化
+- ✅ 安装开发工具（ESLint @antfu/eslint-config v4 / Vitest v3）
+- ✅ 配置 nuxt.config.ts（SSG / modules / runtimeConfig / Tailwind Vite 插件）
+- ✅ 配置 ESLint（eslint.config.mjs）
+- ✅ 配置 Tailwind CSS v4 入口（app/assets/css/main.css）
+- ✅ 创建 .env.example 模板 + .gitignore
+- ✅ 创建目录结构骨架（components/composables/engine/stores/types）
+- ✅ 初始化 Git 仓库（首次提交完成）
+- ✅ 验证 `pnpm dev` 可正常启动（localhost:3000）
 
-## M2：核心类型定义 + Pinia Stores
+## M2：核心类型定义 + Pinia Stores ✅
 
-- ⬜ app/types/game.types.ts（GamePhase / Faction / RoleType / GameState / GameLog / RoundLog）
-- ⬜ app/types/player.types.ts（Player / PlayerMemory）
-- ⬜ app/types/message.types.ts（ChatMessage / MessageType）
-- ⬜ app/types/llm.types.ts（LLMProvider / LLMProviderConfig / PROVIDER_PRESETS）
-- ⬜ app/stores/game.store.ts
-- ⬜ app/stores/players.store.ts
-- ⬜ app/stores/chat.store.ts
-- ⬜ app/stores/settings.store.ts
-- ⬜ app/engine/utils/openai.client.ts（LLM Client 工厂）
-- ⬜ app/engine/utils/role.utils.ts（角色分配 / 胜负判断）
+- ✅ app/types/game.types.ts（GamePhase / Faction / RoleType / GameState / GameLog / RoundLog）
+- ✅ app/types/player.types.ts（Player / PlayerMemory）
+- ✅ app/types/message.types.ts（ChatMessage / MessageType）
+- ✅ app/types/llm.types.ts（LLMProvider / LLMProviderConfig / PROVIDER_PRESETS 6 家供应商）
+- ✅ app/stores/game.store.ts（阶段/轮次/胜负/GameLog 管理）
+- ✅ app/stores/players.store.ts（玩家列表/角色分配/存活状态）
+- ✅ app/stores/chat.store.ts（消息管理 + 流式消息支持）
+- ✅ app/stores/settings.store.ts（LLM 配置 + 提供商预设）
+- ✅ app/engine/utils/openai.client.ts（ChatOpenAI 工厂）
+- ✅ app/engine/utils/role.utils.ts（胜负判断 / 角色名称 / 投票统计 / 狼人共识）
 
 ## M3：LangGraph 引擎核心 - 状态 + ActionProvider
 
