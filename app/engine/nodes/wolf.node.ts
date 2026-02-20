@@ -17,6 +17,7 @@ export async function wolfGroupNode(state: GameGraphState): Promise<Partial<Game
     const result = await provider.nightAction({
       player: wolf,
       alivePlayers: state.alivePlayers,
+      allPlayers: state.players,
       gameLog: gameStore.gameLog,
     })
     if (result.type === 'kill') {

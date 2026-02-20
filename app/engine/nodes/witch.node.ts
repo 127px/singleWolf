@@ -39,6 +39,7 @@ export async function witchNode(state: GameGraphState): Promise<Partial<GameGrap
   const result = await provider.nightAction({
     player: witch,
     alivePlayers: state.alivePlayers,
+    allPlayers: state.players,
     nightKillTarget: state.nightKillTarget ?? undefined,
     gameLog: gameStore.gameLog,
   })

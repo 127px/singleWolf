@@ -1,8 +1,10 @@
 import type { RoleType } from '~/types/game.types'
 import type { Player } from '~/types/player.types'
 
-const COMMON_RULES = `现在正在进行一场狼人杀游戏，每个角色需要根据自己的技能做出相应的行动，确保自己的能够达到自己的胜利目标，
-游戏总共存在{{totalPlayers}}位玩家，剩余存活的玩家是分别是{{aliveList}}`
+const COMMON_RULES = `现在正在进行一场狼人杀游戏，每个角色需要根据自己的技能做出相应的行动，确保自己的能够达到自己的胜利目标。
+游戏总共存在 {{totalPlayers}} 位玩家。
+当前存活的玩家：{{aliveList}}
+当前已死亡的玩家：{{deadList}}`
 
 export const ROLE_SYSTEM_PROMPTS: Record<RoleType, string> = {
   werewolf: `你正在参与一场狼人杀游戏。
@@ -191,21 +193,23 @@ export function buildFinalSystemPrompt(
   player: Player,
   allPlayers: Player[],
 ): string {
-  const aliveList = allPlayers
-    .filter(p => p.isAlive)
-    .map(p => `${p.id}(${p.name})`)
-    .join('、')
+  const alivePlayers = allPlayers.filter(p => p.isAlive)
+  const deadPlayers = allPlayers.filter(p => !p.isAlive)
+
+  const aliveList = alivePlayers.map(p => p.id).join('、') || '无'
+  const deadList = deadPlayers.map(p => p.id).join('、') || '无'
 
   const wolfTeammates = player.role === 'werewolf'
     ? allPlayers
         .filter(p => p.role === 'werewolf' && p.id !== player.id)
-        .map(p => `${p.id}(${p.name})`)
+        .map(p => p.id)
         .join('、')
     : ''
 
   const commonRules = COMMON_RULES
     .replace('{{totalPlayers}}', String(allPlayers.length))
     .replace('{{aliveList}}', aliveList)
+    .replace('{{deadList}}', deadList)
 
   const prompt = rolePrompt
     .replace(/\{\{playerName\}\}/g, player.name)

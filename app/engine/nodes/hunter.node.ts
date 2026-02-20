@@ -15,6 +15,7 @@ export async function hunterNode(
   const targetId = await provider.hunterShot({
     player: hunter,
     alivePlayers: state.alivePlayers,
+    allPlayers: state.players,
     gameLog: { rounds: [] },
   })
 

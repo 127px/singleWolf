@@ -92,7 +92,7 @@ export class AIActionProvider implements RoleActionProvider {
     const systemPrompt = buildFinalSystemPrompt(
       this.player.systemPrompt,
       this.player,
-      ctx.alivePlayers,
+      ctx.allPlayers,
     )
 
     const messages = [
@@ -128,16 +128,11 @@ export class AIActionProvider implements RoleActionProvider {
     const systemPrompt = buildFinalSystemPrompt(
       this.player.systemPrompt,
       this.player,
-      ctx.alivePlayers,
+      ctx.allPlayers,
     )
 
-    const previousSpeechText = ctx.previousSpeeches
-      .map(s => `[${s.senderId}]: ${s.content}`)
-      .join('\n')
-
     const prompt = ACTION_PROMPTS.daySpeech
-      .replace('{{previousSpeeches}}', previousSpeechText || '（暂无发言）')
-      .replace('{{aliveList}}', ctx.alivePlayers.map(p => `${p.id}(${p.name})`).join('、'))
+      .replace('{{aliveList}}', ctx.alivePlayers.map(p => p.id).join('、'))
 
     const messages = [
       { role: 'system' as const, content: systemPrompt },
@@ -173,20 +168,15 @@ export class AIActionProvider implements RoleActionProvider {
     const systemPrompt = buildFinalSystemPrompt(
       this.player.systemPrompt,
       this.player,
-      ctx.alivePlayers,
+      ctx.allPlayers,
     )
-
-    const speechSummary = ctx.speeches
-      .map(s => `[${s.senderId}]: ${s.content}`)
-      .join('\n')
 
     const aliveList = ctx.alivePlayers
       .filter(p => p.id !== this.player.id)
-      .map(p => `${p.id}(${p.name})`)
+      .map(p => p.id)
       .join('、')
 
     const prompt = ACTION_PROMPTS.vote
-      .replace('{{speechSummary}}', speechSummary || '（暂无发言）')
       .replace('{{aliveTargets}}', aliveList)
 
     const messages = [
@@ -204,6 +194,13 @@ export class AIActionProvider implements RoleActionProvider {
       })
       return structured.invoke(messages)
     }, `vote:${this.player.id}`)
+
+    const chatStore = useChatStore()
+    const gameStore = useGameStore()
+    if (result.reasoning) {
+      chatStore.addMessage('reasoning', this.player.id, result.reasoning, gameStore.phase, gameStore.round)
+    }
+
     return result.targetId
   }
 
@@ -214,7 +211,7 @@ export class AIActionProvider implements RoleActionProvider {
     const systemPrompt = buildFinalSystemPrompt(
       this.player.systemPrompt,
       this.player,
-      ctx.alivePlayers,
+      ctx.allPlayers,
     )
 
     const aliveList = ctx.alivePlayers

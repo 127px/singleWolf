@@ -17,6 +17,7 @@ export async function seerNode(state: GameGraphState): Promise<Partial<GameGraph
   const result = await provider.nightAction({
     player: seer,
     alivePlayers: state.alivePlayers,
+    allPlayers: state.players,
     gameLog: gameStore.gameLog,
   })
 

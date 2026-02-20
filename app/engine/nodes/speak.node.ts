@@ -19,6 +19,7 @@ export async function speakNode(
     previousSpeeches: state.speeches,
     gameLog: gameStore.gameLog, // 传入真实 gameLog，AI 可看到历史轮次的公共信息
     alivePlayers: state.alivePlayers,
+    allPlayers: state.players,
     round: state.round,
     nightDeaths: state.nightDeaths || [],
   })

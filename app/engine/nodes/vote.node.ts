@@ -11,15 +11,27 @@ export async function voteNode(
   }
 
   const gameStore = useGameStore()
+  const chatStore = useChatStore()
 
   const provider = createActionProvider(player)
   const targetId = await provider.vote({
     player,
     speeches: state.speeches,
-    gameLog: gameStore.gameLog, // 传入真实 gameLog，AI 可看到历史轮次的发言和投票
+    gameLog: gameStore.gameLog,
     alivePlayers: state.alivePlayers,
+    allPlayers: state.players,
     round: state.round,
   })
+
+  // 展示投票行为到记录面板
+  const targetPlayer = state.players.find(p => p.id === targetId)
+  chatStore.addMessage(
+    'action',
+    playerId,
+    `投票放逐 ${targetPlayer?.name || targetId}`,
+    state.phase,
+    state.round,
+  )
 
   return {
     votes: {

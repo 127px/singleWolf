@@ -5,6 +5,7 @@ import type { Player } from '~/types/player.types'
 export interface NightActionContext {
   player: Player
   alivePlayers: Player[]
+  allPlayers: Player[]
   nightKillTarget?: string
   gameLog: GameLog
 }
@@ -14,6 +15,7 @@ export interface SpeakContext {
   previousSpeeches: ChatMessage[]
   gameLog: GameLog
   alivePlayers: Player[]
+  allPlayers: Player[]
   round: number
   nightDeaths: string[]
 }
@@ -23,12 +25,14 @@ export interface VoteContext {
   speeches: ChatMessage[]
   gameLog: GameLog
   alivePlayers: Player[]
+  allPlayers: Player[]
   round: number
 }
 
 export interface HunterShotContext {
   player: Player
   alivePlayers: Player[]
+  allPlayers: Player[]
   gameLog: GameLog
 }
 
