@@ -1,20 +1,19 @@
-name: Deploy Nuxt to GitHub Pages
+name: Build and Deploy to docs branch
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - master
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout master
         uses: actions/checkout@v4
 
       - name: Setup Node
@@ -22,16 +21,18 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install
+      - name: Install deps
         run: npm install
 
-      - name: Generate Static Site
-        run: npm run generate
+      - name: Generate static files
+        run: |
+          npm run generate
+          cp .output/public/index.html .output/public/404.html
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to docs branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: .output/public
-
-      - name: Deploy to Pages
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .output/public
+          publish_branch: docs
+          force_orphan: true
