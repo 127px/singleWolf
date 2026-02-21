@@ -64,6 +64,7 @@ export default defineNuxtConfig({
         { name: 'description', content: '与 AI 对决的沉浸式狼人杀体验' },
       ],
     },
+    baseURL: '/singleWolf/',
   },
 
   compatibilityDate: '2025-01-01',
